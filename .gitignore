@@ -42,6 +42,11 @@ lerna-debug.log*
 .env.production.local
 .env.local
 
+# Data files (large JSON files for MongoDB import)
+/data
+data/
+*.json
+
 # temp directory
 .temp
 .tmp
