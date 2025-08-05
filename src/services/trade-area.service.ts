@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { TradeArea, TradeAreaDocument } from '../schemas/trade-area.schema';
 import { TradeAreaQueryDto } from '../dto/trade-area-query.dto';
+import { tradeAreaCache } from '../common/cache/memory-cache';
 
 @Injectable()
 export class TradeAreaService {
@@ -12,12 +13,23 @@ export class TradeAreaService {
   ) {}
 
   async findByPlaceId(placeId: string, query?: TradeAreaQueryDto) {
+    // Create cache key based on place ID and query parameters
+    const cacheKey = `place_${placeId}_${query?.percentage || 'all'}`;
+    
+    // Check cache first
+    const cached = tradeAreaCache.get(cacheKey);
+    if (cached) {
+      console.log(`Cache HIT for trade areas: ${cacheKey}`);
+      return cached;
+    }
+
+    console.log(`Cache MISS for trade areas: ${cacheKey}`);
+    
     const filter: any = { place_id: placeId };
 
     if (query?.percentage) {
       filter.trade_area_percentage = query.percentage;
     }
-    
 
     const tradeAreas = await this.tradeAreaModel
       .find(filter)
@@ -29,10 +41,25 @@ export class TradeAreaService {
       throw new NotFoundException(`No trade areas found for place ${placeId}`);
     }
 
+    // Cache the result for 30 minutes
+    tradeAreaCache.set(cacheKey, tradeAreas);
+    
     return tradeAreas;
   }
 
   async findByPlaceIdAndPercentage(placeId: string, percentage: number) {
+    // Create cache key for specific trade area
+    const cacheKey = `trade_area_${placeId}_${percentage}`;
+    
+    // Check cache first
+    const cached = tradeAreaCache.get(cacheKey);
+    if (cached) {
+      console.log(`Cache HIT for trade area: ${cacheKey}`);
+      return cached;
+    }
+
+    console.log(`Cache MISS for trade area: ${cacheKey}`);
+
     const tradeArea = await this.tradeAreaModel
       .findOne({
         place_id: placeId,
@@ -47,6 +74,9 @@ export class TradeAreaService {
         `Trade area ${percentage}% not found for place ${placeId}`,
       );
     }
+
+    // Cache the result for 30 minutes
+    tradeAreaCache.set(cacheKey, tradeArea);
 
     return tradeArea;
   }
