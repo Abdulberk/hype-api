@@ -90,9 +90,7 @@ export class HomeZipcodesService {
       return { zipcode, percentage };
     });
 
-    return zipcodes
-      .sort((a, b) => b.percentage - a.percentage)
-      .slice(0, topN);
+    return zipcodes.sort((a, b) => b.percentage - a.percentage).slice(0, topN);
   }
 
   async getPercentileAnalysis(placeId: string, query?: PercentileAnalysisDto) {
@@ -123,8 +121,7 @@ export class HomeZipcodesService {
     const totalCount = zipcodes.length;
     const maxPercentage = Math.max(...zipcodes);
     const minPercentage = Math.min(...zipcodes);
-    const avgPercentage =
-      zipcodes.reduce((sum, p) => sum + p, 0) / totalCount;
+    const avgPercentage = zipcodes.reduce((sum, p) => sum + p, 0) / totalCount;
     const rangeSize = (maxPercentage - minPercentage) / groups;
 
     const percentileGroups: Array<{

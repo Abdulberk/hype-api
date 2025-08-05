@@ -1,4 +1,11 @@
-import { IsOptional, IsNumber, IsString, IsArray, Min, Max } from 'class-validator';
+import {
+  IsOptional,
+  IsNumber,
+  IsString,
+  IsArray,
+  Min,
+  Max,
+} from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 
 export class CompetitorQueryDto {
@@ -28,7 +35,7 @@ export class CompetitorQueryDto {
   @IsString({ each: true })
   @Transform(({ value }) => {
     if (typeof value === 'string') {
-      return value.split(',').map(s => s.trim());
+      return value.split(',').map((s) => s.trim());
     }
     return value;
   })
@@ -71,7 +78,7 @@ export class CompetitorRadiusDto {
   @IsString({ each: true })
   @Transform(({ value }) => {
     if (typeof value === 'string') {
-      return value.split(',').map(s => s.trim());
+      return value.split(',').map((s) => s.trim());
     }
     return value;
   })

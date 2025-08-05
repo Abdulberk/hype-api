@@ -7,7 +7,8 @@ import { TradeAreaQueryDto } from '../dto/trade-area-query.dto';
 @Injectable()
 export class TradeAreaService {
   constructor(
-    @InjectModel(TradeArea.name) private tradeAreaModel: Model<TradeAreaDocument>,
+    @InjectModel(TradeArea.name)
+    private tradeAreaModel: Model<TradeAreaDocument>,
   ) {}
 
   async findByPlaceId(placeId: string, query?: TradeAreaQueryDto) {

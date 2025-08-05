@@ -6,9 +6,7 @@ import { Zipcode, ZipcodeSchema } from '../schemas/zipcode.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: Zipcode.name, schema: ZipcodeSchema },
-    ]),
+    MongooseModule.forFeature([{ name: Zipcode.name, schema: ZipcodeSchema }]),
   ],
   controllers: [ZipcodeController],
   providers: [ZipcodeService],

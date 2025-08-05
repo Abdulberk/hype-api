@@ -41,11 +41,11 @@ export class ZipcodeController {
   ) {
     const lng = parseFloat(longitude);
     const lat = parseFloat(latitude);
-    
+
     if (isNaN(lng) || isNaN(lat)) {
       throw new Error('Invalid longitude or latitude values');
     }
-    
+
     return this.zipcodeService.findContaining(lng, lat);
   }
 

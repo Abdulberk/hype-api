@@ -1,4 +1,11 @@
-import { IsOptional, IsArray, IsString, IsNumber, Min, Max } from 'class-validator';
+import {
+  IsOptional,
+  IsArray,
+  IsString,
+  IsNumber,
+  Min,
+  Max,
+} from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class ZipcodeQueryDto {
@@ -7,7 +14,7 @@ export class ZipcodeQueryDto {
   @IsString({ each: true })
   @Transform(({ value }) => {
     if (typeof value === 'string') {
-      return value.split(',').map(s => s.trim());
+      return value.split(',').map((s) => s.trim());
     }
     return value;
   })

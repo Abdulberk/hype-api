@@ -29,6 +29,9 @@ export class TradeAreaController {
     @Param('placeId') placeId: string,
     @Param('percentage') percentage: number,
   ) {
-    return this.tradeAreaService.findByPlaceIdAndPercentage(placeId, percentage);
+    return this.tradeAreaService.findByPlaceIdAndPercentage(
+      placeId,
+      percentage,
+    );
   }
 }

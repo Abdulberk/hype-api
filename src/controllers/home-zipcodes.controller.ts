@@ -1,6 +1,9 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { HomeZipcodesService } from '../services/home-zipcodes.service';
-import { HomeZipcodesQueryDto, PercentileAnalysisDto } from '../dto/home-zipcodes-query.dto';
+import {
+  HomeZipcodesQueryDto,
+  PercentileAnalysisDto,
+} from '../dto/home-zipcodes-query.dto';
 
 @Controller('api/v1/home-zipcodes')
 export class HomeZipcodesController {

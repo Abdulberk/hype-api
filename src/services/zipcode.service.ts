@@ -30,9 +30,7 @@ export class ZipcodeService {
   }
 
   async findById(zipcodeId: string) {
-    return this.zipcodeModel
-      .findOne({ zipcode_id: zipcodeId })
-      .exec();
+    return this.zipcodeModel.findOne({ zipcode_id: zipcodeId }).exec();
   }
 
   async findAll(query?: ZipcodeQueryDto) {
@@ -51,7 +49,9 @@ export class ZipcodeService {
 
   async findNear(query: ZipcodeGeoQueryDto) {
     if (!query.longitude || !query.latitude) {
-      throw new Error('Longitude and latitude are required for geospatial queries');
+      throw new Error(
+        'Longitude and latitude are required for geospatial queries',
+      );
     }
 
     const radiusInMeters = (query.radius || 10) * 1000; // Convert km to meters

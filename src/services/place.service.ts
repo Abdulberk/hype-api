@@ -53,7 +53,9 @@ export class PlaceService {
     const [data, total] = await Promise.all([
       this.placeModel
         .find(filter)
-        .select('place_id name street_address city state location industry isTradeAreaAvailable isHomeZipcodesAvailable')
+        .select(
+          'place_id name street_address city state location industry isTradeAreaAvailable isHomeZipcodesAvailable',
+        )
         .skip(skip)
         .limit(limit)
         .lean()
@@ -71,10 +73,7 @@ export class PlaceService {
   }
 
   async findOne(placeId: string) {
-    return this.placeModel
-      .findOne({ place_id: placeId })
-      .lean()
-      .exec();
+    return this.placeModel.findOne({ place_id: placeId }).lean().exec();
   }
 
   async findNearby(nearbyDto: PlaceNearbyDto) {
@@ -99,17 +98,11 @@ export class PlaceService {
   }
 
   async getIndustries() {
-    return this.placeModel
-      .distinct('industry')
-      .lean()
-      .exec();
+    return this.placeModel.distinct('industry').lean().exec();
   }
 
   async getCities() {
-    return this.placeModel
-      .distinct('city')
-      .lean()
-      .exec();
+    return this.placeModel.distinct('city').lean().exec();
   }
 
   async getStats() {
