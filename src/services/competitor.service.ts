@@ -78,6 +78,10 @@ export class CompetitorService {
   }
 
   async findNear(query: CompetitorRadiusDto) {
+    // My Place coordinates (Starbucks)
+    const MY_PLACE_LONGITUDE = -104.73874;
+    const MY_PLACE_LATITUDE = 38.932625;
+
     const radiusInMeters = (query.radius || 5) * 1000; // Convert km to meters
 
     const filter: any = {
@@ -85,7 +89,7 @@ export class CompetitorService {
         $near: {
           $geometry: {
             type: 'Point',
-            coordinates: [query.longitude, query.latitude],
+            coordinates: [MY_PLACE_LONGITUDE, MY_PLACE_LATITUDE],
           },
           $maxDistance: radiusInMeters,
         },

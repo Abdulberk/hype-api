@@ -47,18 +47,6 @@ export class CompetitorQueryDto {
 }
 
 export class CompetitorRadiusDto {
-  @IsNumber()
-  @Min(-180)
-  @Max(180)
-  @Transform(({ value }) => parseFloat(value))
-  longitude!: number;
-
-  @IsNumber()
-  @Min(-90)
-  @Max(90)
-  @Transform(({ value }) => parseFloat(value))
-  latitude!: number;
-
   @IsOptional()
   @IsNumber()
   @Min(0.1)
@@ -69,9 +57,9 @@ export class CompetitorRadiusDto {
   @IsOptional()
   @IsNumber()
   @Min(1)
-  @Max(100)
+  @Max(1000)
   @Transform(({ value }) => parseInt(value))
-  limit?: number = 50;
+  limit?: number;
 
   @IsOptional()
   @IsArray()
