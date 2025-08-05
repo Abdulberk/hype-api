@@ -36,29 +36,45 @@ export class CompetitorService {
       ];
     }
 
-    const limit = query?.limit || 50;
+    const limit = query?.limit;
     const page = query?.page || 1;
-    const skip = (page - 1) * limit;
 
-    const [competitors, total] = await Promise.all([
-      this.competitorModel
-        .find(filter)
-        .sort({ distance: 1 }) // Sort by distance ascending
-        .skip(skip)
-        .limit(limit)
-        .exec(),
-      this.competitorModel.countDocuments(filter),
-    ]);
+    if (limit) {
+      // Pagination kullanılıyor
+      const skip = (page - 1) * limit;
 
-    return {
-      data: competitors,
-      pagination: {
-        page,
-        limit,
+      const [competitors, total] = await Promise.all([
+        this.competitorModel
+          .find(filter)
+          .sort({ distance: 1 })
+          .skip(skip)
+          .limit(limit)
+          .exec(),
+        this.competitorModel.countDocuments(filter),
+      ]);
+
+      return {
+        data: competitors,
+        pagination: {
+          page,
+          limit,
+          total,
+          pages: Math.ceil(total / limit),
+        },
+      };
+    } else {
+      // Limit yok, tüm kayıtları getir
+      const [competitors, total] = await Promise.all([
+        this.competitorModel.find(filter).sort({ distance: 1 }).exec(),
+        this.competitorModel.countDocuments(filter),
+      ]);
+
+      return {
+        data: competitors,
         total,
-        pages: Math.ceil(total / limit),
-      },
-    };
+        pagination: null,
+      };
+    }
   }
 
   async findNear(query: CompetitorRadiusDto) {
@@ -81,10 +97,13 @@ export class CompetitorService {
       filter.sub_category = { $in: query.industries };
     }
 
-    return this.competitorModel
-      .find(filter)
-      .limit(query.limit || 50)
-      .exec();
+    const queryBuilder = this.competitorModel.find(filter);
+
+    if (query.limit) {
+      queryBuilder.limit(query.limit);
+    }
+
+    return queryBuilder.exec();
   }
 
   async findByPlaceId(placeId: string, query?: CompetitorQueryDto) {
@@ -100,11 +119,15 @@ export class CompetitorService {
       filter.distance = { $lte: query.maxDistance };
     }
 
-    return this.competitorModel
+    const queryBuilder = this.competitorModel
       .find(filter)
-      .sort({ distance: 1 })
-      .limit(query?.limit || 50)
-      .exec();
+      .sort({ distance: 1 });
+
+    if (query?.limit) {
+      queryBuilder.limit(query.limit);
+    }
+
+    return queryBuilder.exec();
   }
 
   async getIndustries() {

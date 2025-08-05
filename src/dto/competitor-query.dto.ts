@@ -6,15 +6,15 @@ import {
   Min,
   Max,
 } from 'class-validator';
-import { Transform, Type } from 'class-transformer';
+import { Transform } from 'class-transformer';
 
 export class CompetitorQueryDto {
   @IsOptional()
   @IsNumber()
   @Min(1)
-  @Max(100)
+  @Max(1000)
   @Transform(({ value }) => parseInt(value))
-  limit?: number = 50;
+  limit?: number;
 
   @IsOptional()
   @IsNumber()
@@ -35,9 +35,9 @@ export class CompetitorQueryDto {
   @IsString({ each: true })
   @Transform(({ value }) => {
     if (typeof value === 'string') {
-      return value.split(',').map((s) => s.trim());
+      return value.split(',').map((s: string) => s.trim());
     }
-    return value;
+    return Array.isArray(value) ? (value as string[]) : [];
   })
   industries?: string[]; // sub_category filter
 
@@ -78,9 +78,9 @@ export class CompetitorRadiusDto {
   @IsString({ each: true })
   @Transform(({ value }) => {
     if (typeof value === 'string') {
-      return value.split(',').map((s) => s.trim());
+      return value.split(',').map((s: string) => s.trim());
     }
-    return value;
+    return Array.isArray(value) ? (value as string[]) : [];
   })
   industries?: string[];
 }
