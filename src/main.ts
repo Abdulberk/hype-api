@@ -15,6 +15,15 @@ async function bootstrap() {
     }),
   );
 
+  // Register compression plugin for response optimization
+  const fastifyInstance = app.getHttpAdapter().getInstance();
+  const compress = await import('@fastify/compress');
+  await fastifyInstance.register(compress.default, {
+    global: true,
+    encodings: ['gzip', 'deflate', 'br'], // brotli, gzip, deflate
+    threshold: 15360, // Only compress responses > 15KB (15KB * 1024 = 15360 bytes)
+  });
+
   // Global validation pipe
   app.useGlobalPipes(
     new ValidationPipe({
@@ -29,6 +38,6 @@ async function bootstrap() {
 
   const port = process.env.PORT || 3000;
   await app.listen(port, '0.0.0.0');
-  console.log(`🚀 API running on port ${port}`);
+  console.log(`🚀 API running on port ${port} with compression enabled`);
 }
 bootstrap();

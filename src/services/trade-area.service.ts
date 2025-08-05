@@ -17,6 +17,7 @@ export class TradeAreaService {
     if (query?.percentage) {
       filter.trade_area_percentage = query.percentage;
     }
+    
 
     const tradeAreas = await this.tradeAreaModel
       .find(filter)
